@@ -1,0 +1,48 @@
+{{>licenseInfo}}
+#include "BinaryData.h"
+
+{{#modelNamespaceDeclarations}}
+namespace {{this}} {
+{{/modelNamespaceDeclarations}}
+
+BinaryData::BinaryData()
+{
+    m_binaryData = utility::string_t();
+}
+
+BinaryData::~BinaryData()
+{
+}
+
+void BinaryData::validate()
+{
+    // TODO: implement validation
+}
+
+web::json::value BinaryData::toJson() const
+{
+    return ModelBase::toJson(m_binaryData);
+}
+
+void BinaryData::fromJson(web::json::value& val)
+{
+    m_binaryData = ModelBase::stringFromJson(val);
+}
+
+void BinaryData::toMultipart(std::shared_ptr<MultipartFormData> multipart, const utility::string_t& prefix) const
+{
+    utility::string_t namePrefix = prefix;
+    if(namePrefix.size() > 0 && namePrefix.substr(namePrefix.size() - 1) != utility::conversions::to_string_t(_XPLATSTR(".")))
+    {
+        namePrefix += utility::conversions::to_string_t(_XPLATSTR("."));
+    }
+    multipart->add(ModelBase::toHttpContent(namePrefix + utility::conversions::to_string_t(_XPLATSTR("object")), m_binaryData));
+}
+
+void BinaryData::fromMultiPart(std::shared_ptr<MultipartFormData> multipart, const utility::string_t& prefix)
+{
+}
+
+{{#modelNamespaceDeclarations}}
+}
+{{/modelNamespaceDeclarations}}
